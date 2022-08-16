@@ -66,6 +66,26 @@ public class Graph {
         return g2;
     }
 
+    public float density(){
+        return (this.countEdges)/(this.countNodes * (this.countNodes -1));
+    }
+
+    public  boolean subGraf(Graph g2){
+        if (g2.getCountEdges() > this.countEdges || g2.getCountNodes() > this.countNodes) {
+            return false;
+        }else{
+            int[][] g2Mat = g2.getAdjMatrix();
+            for (int i = 0; i < g2Mat.length; i++) {
+                for (int j = 0; j < g2Mat[i].length; j++) {
+                    if (g2Mat[i][j] != 0 && this.adjMatrix[i][j] == 0){
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
     public int getCountNodes() {
         return countNodes;
     }
