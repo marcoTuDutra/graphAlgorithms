@@ -53,7 +53,7 @@ public class Graph {
         }
         this.adjMatrix[u][v] = w;
         this.adjMatrix[v][u] = w;
-        this.countEdges+= 2;
+        this.countEdges += 2;
     }
 
     public int degree(int node) {
@@ -139,10 +139,9 @@ public class Graph {
 
         while (Q.size() > 0) {
             int u = Q.remove(0);
-
             for (int v = 0; v < this.adjMatrix[u].length; v++) {
-                if (this.adjMatrix[u][v] != 0){
-                    if (desc[v] == 0){
+                if (this.adjMatrix[u][v] != 0) {
+                    if (desc[v] == 0) {
                         Q.add(v);
                         R.add(v);
                         desc[v] = 1;
@@ -152,9 +151,39 @@ public class Graph {
         }
         return R;
     }
-    
-    public boolean connected(){
-        return  (this.bfs(0).size() == this.countNodes);
+
+    public ArrayList<Integer> dfs(int s) {
+        int[] desc = new int[this.countNodes];
+
+        ArrayList<Integer> S = new ArrayList<>();
+        S.add(s);
+
+        ArrayList<Integer> R = new ArrayList<>();
+        R.add(s);
+
+        desc[s] = 1;
+
+        while (S.size() > 0) {
+            boolean unstack = true;
+            int u = S.get(S.size() - 1);
+            for (int v = 0; v < this.adjMatrix[u].length; v++) {
+                if (this.adjMatrix[u][v] != 0 && desc[v] == 0) {
+                    S.add(v);
+                    R.add(v);
+                    desc[v] = 1;
+                    unstack = false;
+                    break;
+                }
+            }
+            if (unstack) {
+                S.remove(S.size() -1);
+            }
+        }
+        return R;
+    }
+
+    public boolean connected() {
+        return (this.bfs(0).size() == this.countNodes);
     }
 
     public int getCountNodes() {
