@@ -176,11 +176,40 @@ public class Graph {
                 }
             }
             if (unstack) {
-                S.remove(S.size() -1);
+                S.remove(S.size() - 1);
             }
         }
         return R;
     }
+
+    public ArrayList<Integer> dfsRec(int s) {
+        int[] desc = new int[this.countNodes];
+        ArrayList<Integer> R = new ArrayList<>();
+        dfsRecAux(s, desc, R);
+        return R;
+    }
+
+    private void dfsRecAux(int u, int[] desc, ArrayList<Integer> R) {
+        desc[u] = 1;
+        R.add(u);
+        for (int v = 0; v < this.adjMatrix[u].length; v++) {
+            if (this.adjMatrix[u][v] != 0 && desc[v] == 0) {
+                dfsRecAux(v, desc,R);
+            }
+        }
+    }
+
+    public boolean nomOriented() {
+        for (int i = 1; i < this.adjMatrix.length; i++) {
+            for (int j = i + 1; j < this.adjMatrix[i].length; j++) {
+                if (adjMatrix[i][j] != adjMatrix[j][i]) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
 
     public boolean connected() {
         return (this.bfs(0).size() == this.countNodes);

@@ -64,6 +64,7 @@ public class Main {
 
         System.out.println(g1);
         System.out.println(g1.dfs(6));
-
+        System.out.println(g1.nomOriented());
+        System.out.println(g1.dfsRec(6));
     }
 }
