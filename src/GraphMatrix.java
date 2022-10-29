@@ -307,12 +307,6 @@ public class GraphMatrix {
         }
 
         String[][] mat = new String[contLines][contCols];
-        bufferedReader.close();
-        reader.close();
-
-        reader = new FileReader(file);
-        bufferedReader = new BufferedReader(reader);
-
 
         bufferedReader.close();
         reader.close();

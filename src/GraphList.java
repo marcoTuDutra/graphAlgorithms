@@ -5,12 +5,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class GraphList {
-
     private int countNodes;
     private int countEdges;
     private ArrayList<ArrayList<Edge>> adjList;
     private ArrayList<Edge> edgeList;
-    private static final int INF = 999999;
+    private static final int INF = 999999999;
 
     public GraphList(int countNodes) {
         this.countNodes = countNodes;
@@ -303,6 +302,150 @@ public class GraphList {
         return T;
     }
 
+    public void bellmanFord(int s, int t){
+        int V = this.countNodes;
+        int E = this.countEdges;
+        int []dist = new int[this.countNodes];
+        int []pred = new int[this.countNodes];
+        for (int u = 0; u < V; ++u){
+            dist[u] = INF;
+            pred[u] = 0;
+        }
+        dist[s] = 0;
+        for(int i = 0; i < V; ++i) {
+            for (int j = 0; j < E; ++j) {
+                int u = this.edgeList.get(j).getSource();
+                int v = this.edgeList.get(j).getSink();
+                int w = this.edgeList.get(j).getWeight();
+                if (dist[v] > dist[u] + w && dist[u] != Integer.MAX_VALUE) {
+                    dist[v] = dist[u] + w;
+                    pred[v] = u;
+                }
+            }
+        }
+
+        ArrayList<Integer> C = new ArrayList<>();
+        int aux = t;
+        C.add(t);
+        while(aux != s){
+            aux = pred[aux];
+            C.add(0, aux);
+        }
+
+        System.out.println("Caminho: "+ C);
+        System.out.println("Custo: "+dist[t]);
+    }
+
+    void improvedBellmanFord(int s, int t) {
+        int V = this.countNodes;
+        int E = this.countEdges;
+        int dist[] = new int[this.countNodes];
+        int pred[] = new int[this.countNodes];
+        boolean flag;
+
+        for (int i = 0; i < V; i++) {
+            dist[i] = INF;
+            pred[i] = 0;
+        }
+        dist[s] = 0;
+
+        for (int i = 1; i < V; ++i) {
+            flag = false;
+            for (int j = 0; j < E; ++j) {
+                int u = this.edgeList.get(j).getSource();
+                int v = this.edgeList.get(j).getSink();
+                int w = this.edgeList.get(j).getWeight();
+                if (dist[v] > dist[u] + w && dist[u] != Integer.MAX_VALUE) {
+                    dist[v] = dist[u] + w;
+                    pred[v] = u;
+                    flag = true;
+                }
+            }
+            if (flag = false) {
+                break;
+            }
+        }
+
+        for (int j = 0; j < E; ++j) {
+            int u = this.edgeList.get(j).getSource();
+            int v = this.edgeList.get(j).getSink();
+            int w = this.edgeList.get(j).getWeight();
+            if (dist[v] > dist[u] + w && dist[u] != INF) {
+                System.out.println("O grafo possui pesos negativos");
+                return;
+            }
+        }
+
+        ArrayList<Integer> C = new ArrayList<>();
+        int aux = t;
+        C.add(t);
+        while (aux != s) {
+            aux = pred[aux];
+            C.add(0, aux);
+        }
+
+        System.out.println("Caminho: "+ C);
+        System.out.println("Custo: "+dist[t]);
+    }
+
+    private int getLowerDistance(ArrayList<Integer> eddgesList, int[] distancesList) {
+        int lowerDistance = INF;
+        int edge = 0;
+
+        for (int i = 0; i < eddgesList.size(); i++) {
+            if (distancesList[i] < lowerDistance) {
+                edge = eddgesList.get(i);
+            }
+        }
+
+        return edge;
+    }
+
+    private ArrayList<Edge> getAdjEdges(int edge) {
+        return this.adjList.get(edge);
+    }
+
+    public void dijkstra(int s, int t) {
+        int[] dist = new int[this.countNodes];
+        int[] pred = new int[this.countNodes];
+
+        ArrayList<Integer> Q = new ArrayList<>();
+        for (int v = 0; v < this.countNodes; ++v) {
+            dist[v] = INF;
+            pred[v] = -1;
+        }
+
+        dist[s] = 0;
+
+        for (int v = 0; v < this.countNodes; ++v) {
+            Q.add(v);
+        }
+
+        while (Q.size() != 0) {
+            int u = getLowerDistance(Q, dist);
+            Q.remove((Integer) u);
+            for (Edge edge : getAdjEdges(u)) {
+                if (dist[edge.getSink()] > dist[u] + edge.getWeight()) {
+                    dist[edge.getSink()] = dist[u] + edge.getWeight();
+                    pred[edge.getSink()] = u;
+                }
+          }
+        }
+
+        ArrayList path = new ArrayList<Integer>();
+
+        int aux = t;
+        path.add(0, aux);
+        while(aux != s){
+            aux = pred[aux];
+            path.add(0, aux);
+        }
+
+        System.out.println("Caminho: "+ path);
+        System.out.println("Custo: "+dist[t]);
+
+    }
+
     public int getCountNodes() {
         return countNodes;
     }
@@ -338,7 +481,6 @@ public class GraphList {
         }
         return str;
     }
-
 
 
 }
